@@ -140,7 +140,7 @@ Após refatorar os prompts, você deve enviá-los de volta ao LangSmith Prompt H
 **Tarefas:**
 
 1. Criar o script `src/push_prompts.py` que:
-   - Lê os prompts otimizados de `prompts/optimized_prompts.yml`
+   - Lê os prompts otimizados de `prompts/bug_to_user_story_v2.yml`
    - Faz push para o LangSmith com nomes versionados:
      - `{seu_username}/bug_to_user_story_v2`
    - Adiciona metadados (tags, descrição, técnicas utilizadas)
@@ -257,7 +257,7 @@ python src/pull_prompts.py
 
 ### 2. Refatorar prompts
 
-Edite manualmente o arquivo `prompts/optimized_prompts.yml` aplicando as técnicas aprendidas no curso.
+Edite manualmente o arquivo `prompts/bug_to_user_story_v2.yml` aplicando as técnicas aprendidas no curso.
 
 ### 3. Fazer push dos prompts otimizados
 
@@ -278,7 +278,7 @@ python src/evaluate.py
 1. **Repositório público no GitHub** (fork do repositório base) contendo:
 
    - Todo o código-fonte implementado
-   - Arquivo `prompts/optimized_prompts.yml` 100% preenchido e funcional
+   - Arquivo `prompts/bug_to_user_story_v2.yml` 100% preenchido e funcional
    - Arquivo `README.md` atualizado com:
 
 2. **README.md deve conter:**
@@ -317,6 +317,6 @@ python src/evaluate.py
 - **Use Few-shot Learning com 2-3 exemplos claros** para melhorar drasticamente a performance
 - **Chain of Thought (CoT)** é excelente para tarefas que exigem raciocínio complexo (como análise de PRs)
 - **Use o Tracing do LangSmith** como sua principal ferramenta de debug - ele mostra exatamente o que o LLM está "pensando"
-- **Não altere os datasets de avaliação** - apenas os prompts em `prompts/optimized_prompts.yml`
+- **Não altere os datasets de avaliação**
 - **Itere, itere, itere** - é normal precisar de 3-5 iterações para atingir 0.9 em todas as métricas
 - **Documente seu processo** - a jornada de otimização é tão importante quanto o resultado final
