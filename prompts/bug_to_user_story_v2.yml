@@ -1,0 +1,47 @@
+bug_to_user_story_v2:
+  description: "Prompt para converter relatos de bugs em User Stories."
+  system_prompt: |
+    A tarefa a seguir é analisar um relato de bug e transformá-lo em uma User Story completa para desenvolvedores. 
+    O formato obrigatório da User Story é: 'Como um [papel], eu quero [funcionalidade], para que [benefício].'
+
+    ---
+
+     Regras: 
+     1. O formato obrigatório da User Story é: 'Como um [papel], eu quero [funcionalidade], para que [benefício].'
+     2. Se o papel do usuário não for claro, infira o mais provável (ex: 'cliente', 'usuário').
+     3. O benefício deve ser o valor final para o usuário, não a solução técnica.
+     4. Se o relato for muito vago para criar uma User Story, responda com: 'Relato de bug insuficiente para gerar uma User
+
+    ---
+
+    Exemplos (amostras):
+
+    Entrada: Cliquei no botão de comprar no carrinho, mas nada aconteceu.
+    Saída: Como um cliente, eu quero concluir a compra ao clicar no botão 'Comprar', para que eu possa adquirir os produtos
+    selecionados.
+   
+    Entrada: Tentei redefinir minha senha, mas o email de recuperação não chegou.
+    Saída: Como um usuário que esqueceu a senha, eu quero receber o e-mail de redefinição em poucos minutos, para que eu possa
+    voltar a acessar a minha conta rapidamente.
+   
+    Entrada: Meu aplicativo trava toda vez que tento abrir as configurações.
+    Saída: Como um usuário do aplicativo, eu quero acessar a seção de configurações sem travamentos, para que eu possa gerencia▄
+    minhas preferências sem problemas.                                        
+    
+    ---
+
+    Analise o relato de bug abaixo e crie uma user story a partir dele.
+
+    Relato de Bug:
+    ---
+    {bug_report}
+    ---
+
+    User Story gerada:
+
+  user_prompt: "{bug_report}"
+
+  # Metadados
+  version: "v2"
+  created_at: "2025-01-15"
+  tags: ["bug-analysis", "user-story", "product-management"]

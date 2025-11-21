@@ -24,7 +24,7 @@ from typing import List, Dict, Any
 from pathlib import Path
 from dotenv import load_dotenv
 from langsmith import Client
-from langchain import hub
+# REMOVIDO: from langchain_hub import pull (Causava erro de dependência)
 from langchain_core.prompts import ChatPromptTemplate
 from utils import check_env_vars, format_score, print_section_header, get_llm as get_configured_llm
 from metrics import evaluate_f1_score, evaluate_clarity, evaluate_precision
@@ -102,10 +102,16 @@ def create_evaluation_dataset(client: Client, dataset_name: str, jsonl_path: str
         return dataset_name
 
 
-def pull_prompt_from_langsmith(prompt_name: str) -> ChatPromptTemplate:
+def pull_prompt_from_langsmith(prompt_name: str, client: Client) -> ChatPromptTemplate:
+    """
+    Puxa o prompt usando o Client do LangSmith diretamente, evitando a dependência 'langchain-hub'.
+    """
     try:
         print(f"   Puxando prompt do LangSmith Hub: {prompt_name}")
-        prompt = hub.pull(prompt_name)
+        
+        # ALTERAÇÃO CRÍTICA: Usando client.pull_prompt em vez de hub.pull
+        prompt = client.pull_prompt(prompt_name)
+        
         print(f"   ✓ Prompt carregado com sucesso")
         return prompt
 
@@ -186,7 +192,8 @@ def evaluate_prompt(
     print(f"\n🔍 Avaliando: {prompt_name}")
 
     try:
-        prompt_template = pull_prompt_from_langsmith(prompt_name)
+        # Passamos o client explicitamente aqui
+        prompt_template = pull_prompt_from_langsmith(prompt_name, client)
 
         examples = list(client.list_examples(dataset_name=dataset_name))
         print(f"   Dataset: {len(examples)} exemplos")
@@ -245,13 +252,13 @@ def display_results(prompt_name: str, scores: Dict[str, float]) -> bool:
     print("=" * 50)
 
     print("\nMétricas LangSmith:")
-    print(f"  - Helpfulness: {format_score(scores['helpfulness'], threshold=0.8)}")
-    print(f"  - Correctness: {format_score(scores['correctness'], threshold=0.8)}")
+    print(f"   - Helpfulness: {format_score(scores['helpfulness'], threshold=0.8)}")
+    print(f"   - Correctness: {format_score(scores['correctness'], threshold=0.8)}")
 
     print("\nMétricas Customizadas:")
-    print(f"  - F1-Score: {format_score(scores['f1_score'], threshold=0.8)}")
-    print(f"  - Clarity: {format_score(scores['clarity'], threshold=0.8)}")
-    print(f"  - Precision: {format_score(scores['precision'], threshold=0.8)}")
+    print(f"   - F1-Score: {format_score(scores['f1_score'], threshold=0.8)}")
+    print(f"   - Clarity: {format_score(scores['clarity'], threshold=0.8)}")
+    print(f"   - Precision: {format_score(scores['precision'], threshold=0.8)}")
 
     average_score = sum(scores.values()) / len(scores)
 
@@ -308,11 +315,12 @@ def main():
     print("=" * 70)
     print("\nEste script irá puxar prompts do LangSmith Hub.")
     print("Certifique-se de ter feito push dos prompts antes de avaliar:")
-    print("  python src/push_prompts.py\n")
+    print("   python src/push_prompts.py\n")
 
     prompts_to_evaluate = [
         "bug_to_user_story_v2",
     ]
+    # Se você precisar do usuário completo ex: "seu-usuario/bug_to_user_story_v2", ajuste acima.
 
     all_passed = True
     evaluated_count = 0
@@ -364,7 +372,7 @@ def main():
     if all_passed:
         print("✅ Todos os prompts atingiram média >= 0.8!")
         print(f"\n✓ Confira os resultados em:")
-        print(f"  https://smith.langchain.com/projects/{project_name}")
+        print(f"   https://smith.langchain.com/projects/{project_name}")
         print("\nPróximos passos:")
         print("1. Documente o processo no README.md")
         print("2. Capture screenshots das avaliações")
